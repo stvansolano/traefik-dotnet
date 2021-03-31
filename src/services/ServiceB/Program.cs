@@ -17,7 +17,7 @@ class Program
         app.UseEndpoints(e =>
         {
             e.MapGet("/", context =>
-                context.Response.WriteAsJsonAsync(new { Message = "Hello, World! This is Service B"})
+                context.Response.WriteAsync("Hello, World! This is Service B")
             );
         });
     }).Build().Run();

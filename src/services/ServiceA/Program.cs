@@ -14,7 +14,11 @@ class Program
 {
     public static void Main(string[] args) =>  WebHost.CreateDefaultBuilder(args)
     .ConfigureServices((IServiceCollection services) => {
-        services.AddTransient(sp => new HttpClient { BaseAddress = new System.Uri("http://localhost:6000") });
+        services.AddTransient(sp => new HttpClient { 
+            BaseAddress = new System.Uri(
+                System.Environment.GetEnvironmentVariable("service-b-url") ??
+                "http://localhost:6000") 
+        });
     })
     .Configure(app =>
     {
@@ -25,9 +29,9 @@ class Program
                 await context.Response.WriteAsJsonAsync(new object[]
                 {
                     new { Message = "Hello, World! This is Service A"},
+                    // Call ServiceB 
                     new 
                     {
-                        // Call ServiceB 
                         Message = await context.RequestServices.GetService<HttpClient>()
                                                .GetStringAsync("/")
                                                .ConfigureAwait(false)
