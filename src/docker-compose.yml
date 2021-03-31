@@ -17,14 +17,15 @@ services:
     build: 
       dockerfile: services/ServiceB/Dockerfile
       context: .
+    ports:
+      - 6000:80
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
       # The domain the service will respond to
-      - "traefik.http.routers.serviceB.rule=Path(`/serviceB`)"
+      - "traefik.http.routers.serviceB.rule=PathPrefix(`/serviceB`)"
       - "traefik.http.routers.serviceB.service=service-b-src"
-      - "traefik.http.routers.serviceB.entrypoints=web"
-
+  
   traefik:
     image: "traefik:v2.4"
     container_name: "traefik"
